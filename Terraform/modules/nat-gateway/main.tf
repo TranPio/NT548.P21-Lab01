@@ -6,7 +6,7 @@ locals {
 #-----------------Tạo Elastic IP----------------------#    
 #-----------------------------------------------------#
 resource "aws_eip" "nat_eip" {
-  vpc = true
+  domain = "vpc"
 
   tags = {
     Name = "${local.project_name}-nat-eip"
