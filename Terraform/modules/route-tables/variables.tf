@@ -25,11 +25,11 @@ variable "nat_gateway_id" {
 variable "public_subnet_ids" {
     description = "List of public subnet IDs."
     type        = list(string)
-    default     = "subnet-0fa5b292ca7500cd5"
+    default     = ["subnet-0fa5b292ca7500cd5"]
 }
 
 variable "private_subnet_ids" {
   description = "List of private subnet IDs."
     type        = list(string)
-    default     = "subnet-0de3227231cb98ede"
+    default     = ["subnet-0de3227231cb98ede"]
 }
