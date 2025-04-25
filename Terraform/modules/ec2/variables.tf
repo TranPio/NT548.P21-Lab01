@@ -13,13 +13,25 @@ variable "instance_configuration" {
         subnet_id               = string
         vpc_security_group_ids  = list(string)
         key_name                = string
+        user_data_file          = optional(string, null)
         associate_elastic_ip    = bool 
+        root_block_device = optional(object({
+            volume_size           = number
+            volume_type           = string
+        }))
         tags                    = map(string) 
     }))
-    default = [{
-        name                   = "public-instance-1"
+    default = [
+        #Public instance 
+    {
+        name                    = "public-instance-1"
         ami                     = "ami-0c1907b6d738188e5" # Ubuntu 22.04
         instance_type           = "t2.micro"
+        subnet_id               = "subnet-0fa5b292ca7500cd5" 
+        vpc_security_group_ids  = ["sg-062c6a8eca5edcaf6"]
+        key_name                = "nt548-lab01-group10-key" 
+        user_data_file          = null
+        associate_elastic_ip    = true
         root_block_device = {
             volume_size           = 8
             volume_type           = "gp2"
@@ -27,15 +39,17 @@ variable "instance_configuration" {
          tags                    = {
             Name = "public-instance"
         }
-        subnet_id               = "subnet-0bb1c79de3EXAMPLE" # Replace with your subnet ID
-        vpc_security_group_ids  = ["sg-0bb1c79de3EXAMPLE"] # Replace with your security group ID
-        key_name                = "my-key-pair" # Replace with your key pair name
-        associate_elastic_ip    = true
     },
+    #Private instance
     {
         name                   = "private-instance-1"
-        ami                     = "ami-0c1907b6d738188e5" # Ubuntu 22.04
-        instance_type           = "t2.micro"
+        ami                    = "ami-0c1907b6d738188e5" # Ubuntu 22.04
+        instance_type          = "t2.micro"
+        subnet_id              = "subnet-0de3227231cb98ede"
+        vpc_security_group_ids = [ "sg-085051cac0edf57f0" ]
+        key_name               = "nt548-lab01-group10-key"
+        user_data_file         = null
+        associate_elastic_ip   = false
         root_block_device = {
             volume_size           = 8
             volume_type           = "gp2"
@@ -43,10 +57,5 @@ variable "instance_configuration" {
          tags                    = {
             Name = "private-instance"
         }
-        subnet_id               = "subnet-0bb1c79de3EXAMPLE" # Replace with your subnet ID
-        vpc_security_group_ids  = ["sg-0bb1c79de3EXAMPLE"] # Replace with your security group ID
-        key_name                = "my-key-pair" # Replace with your key pair name
-        associate_elastic_ip    = false
     }]
-  
 }
