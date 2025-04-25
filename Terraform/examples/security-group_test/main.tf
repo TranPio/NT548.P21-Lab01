@@ -17,8 +17,9 @@ module "security_group_test_instance" {
   source = "../../modules/security-group"
 
   # Cung cấp các giá trị đầu vào cho test
-  project_name    = "nt548-lab01-group10group10-test"
+  project_name    = "nt548-lab01-group10-test"
   vpc_id          = var.test_vpc_id
+  allowed_ssh_cidr = var.test_allowed_ssh_cidr
 }
 
 # Define outputs để xem kết quả test
