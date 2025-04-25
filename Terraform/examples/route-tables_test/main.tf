@@ -21,13 +21,13 @@ variable "test_nat_gateway_id" {
 variable "test_public_subnet_ids" {
   description = "List of public subnet IDs created in vpc_test."
   type        = list(string)
-  default     = "subnet-0fa5b292ca7500cd5"
+  default     = ["subnet-0fa5b292ca7500cd5"]
 }
 
 variable "test_private_subnet_ids" {
   description = "List of private subnet IDs created in vpc_test."
   type        = list(string)
-  default     = "subnet-0de3227231cb98ede"
+  default     = ["subnet-0de3227231cb98ede"]
 }
 
 # Call the route-tables module
