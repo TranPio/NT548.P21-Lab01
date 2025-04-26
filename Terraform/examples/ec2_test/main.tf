@@ -1,4 +1,3 @@
-
 # Define variables với giá trị lấy từ output của các test trước
 variable "test_vpc_id" {
   description = "ID of the VPC created in vpc_test"
@@ -35,6 +34,11 @@ module "ec2_test_instance" {
   source = "../../modules/ec2"
 
   project_name = "nt548-lab01-ec2-test"
+  aws_region = "ap-southeast-1"
+  
+  # Chọn tạo key mới hoặc dùng key có sẵn
+  create_new_keypair = true  # Đặt thành true để test tạo key mới
+  existing_key_name = "nt548-lab01-group10-key"  # Dùng khi create_new_keypair = false
   
   # Override default configuration để test với giá trị từ các test trước
   instance_configuration = [
@@ -44,7 +48,7 @@ module "ec2_test_instance" {
       instance_type          = "t2.micro"
       subnet_id              = var.test_public_subnet_id
       vpc_security_group_ids = [var.test_public_sg_id]
-      key_name               = "nt548-lab01-group10-key"
+      # Không cần khai báo key_name nếu create_new_keypair = true
       user_data_file         = null
       associate_elastic_ip   = true
       root_block_device = {
@@ -62,7 +66,7 @@ module "ec2_test_instance" {
       instance_type          = "t2.micro"
       subnet_id              = var.test_private_subnet_id
       vpc_security_group_ids = [var.test_private_sg_id]
-      key_name               = "nt548-lab01-group10-key"
+      # Không cần khai báo key_name nếu create_new_keypair = true
       user_data_file         = null
       associate_elastic_ip   = false
       root_block_device = {
@@ -77,7 +81,7 @@ module "ec2_test_instance" {
   ]
 }
 
-# Define outputs để xem kết quả test
+# Cập nhật outputs để xem kết quả test
 output "test_instance_ids" {
   description = "IDs of EC2 instances created in the test"
   value       = module.ec2_test_instance.instance_ids
@@ -106,4 +110,15 @@ output "test_public_instance_id" {
 output "test_private_instance_id" {
   description = "ID của private instance"  
   value       = module.ec2_test_instance.private_instance_id
+}
+
+# Thêm outputs mới về key pair
+output "test_key_pair_name" {
+  description = "Tên của SSH key pair được sử dụng"
+  value       = module.ec2_test_instance.key_pair_name
+}
+
+output "test_key_secret_name" {
+  description = "Tên của secret chứa private key (nếu tạo mới)"
+  value       = module.ec2_test_instance.key_secret_name
 }
