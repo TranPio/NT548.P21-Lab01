@@ -49,7 +49,7 @@ variable "instance_configuration" {
         instance_type           = "t2.micro"
         subnet_id               = "subnet-0fa5b292ca7500cd5" 
         vpc_security_group_ids  = ["sg-062c6a8eca5edcaf6"]
-        key_name                = "nt548-lab01-group10-key" 
+        key_name                = "nt548-lab01-group10-key-1" 
         user_data_file          = "user-data.sh"
         associate_elastic_ip    = true
         root_block_device = {
@@ -67,7 +67,7 @@ variable "instance_configuration" {
         instance_type          = "t2.micro"
         subnet_id              = "subnet-0de3227231cb98ede"
         vpc_security_group_ids = [ "sg-085051cac0edf57f0" ]
-        key_name               = "nt548-lab01-group10-key"
+        key_name               = "nt548-lab01-group10-key-1"
         user_data_file         = null
         associate_elastic_ip   = false
         root_block_device = {

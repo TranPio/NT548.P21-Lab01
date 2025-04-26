@@ -1,60 +1,55 @@
 output "vpc_id" {
-  description = "ID của VPC đã tạo"
+  description = "VPC ID"
   value       = module.vpc.vpc_id
 }
 
-output "public_subnet_id" {
-  description = "ID của public subnet"
-  value       = module.vpc.public_subnet_id
+output "public_subnet_ids" {
+  description = "Danh sách Public Subnet IDs"
+  value       = module.vpc.public_subnet_ids
 }
 
-output "private_subnet_id" {
-  description = "ID của private subnet"
-  value       = module.vpc.private_subnet_id
+output "private_subnet_ids" {
+  description = "Danh sách Private Subnet IDs"
+  value       = module.vpc.private_subnet_ids
 }
 
 output "internet_gateway_id" {
-  description = "ID của Internet Gateway"
+  description = "Internet Gateway ID"
   value       = module.vpc.internet_gateway_id
 }
 
-output "nat_gateway_id" {
-  description = "ID của NAT Gateway"
-  value       = module.nat_gateway.nat_gateway_id
-}
-
-output "nat_gateway_elastic_ip" {
-  description = "Elastic IP của NAT Gateway"
-  value       = module.nat_gateway.elastic_ip
-}
-
-output "public_security_group_id" {
-  description = "ID của security group cho public instances"
-  value       = module.security_group.public_security_group_id
-}
-
-output "private_security_group_id" {
-  description = "ID của security group cho private instances"
-  value       = module.security_group.private_security_group_id
-}
-
 output "public_route_table_id" {
-  description = "ID của public route table"
+  description = "Public Route Table ID"
   value       = module.route_tables.public_route_table_id
 }
 
 output "private_route_table_id" {
-  description = "ID của private route table"
+  description = "Private Route Table ID"
   value       = module.route_tables.private_route_table_id
 }
 
+output "nat_gateway_id" {
+  description = "NAT Gateway ID"
+  value       = module.nat_gateway.nat_gateway_id
+}
+
+output "public_security_group_id" {
+  description = "Public EC2 Security Group ID"
+  value       = module.security_group.public_security_group_id
+}
+
+output "private_security_group_id" {
+  description = "Private EC2 Security Group ID"
+  value       = module.security_group.private_security_group_id
+}
+
 output "instance_ids" {
-  description = "IDs của các EC2 instances"
+  description = "IDs của các EC2 instance"
   value       = module.ec2.instance_ids
 }
 
 output "instance_public_ips" {
-  description = "Public IPs của các EC2 instances"
+  description = "Public IPs hoặc Elastic IPs của các EC2 instances"
   value       = module.ec2.instance_public_ips
 }
 
@@ -64,16 +59,16 @@ output "instance_private_ips" {
 }
 
 output "elastic_ip_ids" {
-  description = "IDs của các Elastic IPs"
+  description = "Elastic IP Allocation IDs"
   value       = module.ec2.elastic_ip_ids
 }
 
-output "public_instance_id" {
-  description = "ID của public instance"
-  value       = module.ec2.public_instance_id
+output "key_pair_name" {
+  description = "SSH Key Pair Name"
+  value       = module.ec2.key_pair_name
 }
 
-output "private_instance_id" {
-  description = "ID của private instance" 
-  value       = module.ec2.private_instance_id
+output "key_secret_name" {
+  description = "Tên Secret Manager chứa Private Key"
+  value       = module.ec2.key_secret_name
 }
