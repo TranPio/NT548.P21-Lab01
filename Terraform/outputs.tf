@@ -1,74 +1,59 @@
 output "vpc_id" {
-  description = "The ID of the VPC."
-  value       = module.vpc.vpc_id
+  value = module.vpc_module.vpc_id
 }
 
 output "public_subnet_ids" {
-  description = "The list of public subnet IDs."
-  value       = module.vpc.public_subnet_ids
+  value = module.vpc_module.public_subnet_ids
 }
 
 output "private_subnet_ids" {
-  description = "The list of private subnet IDs."
-  value       = module.vpc.private_subnet_ids
+  value = module.vpc_module.private_subnet_ids
 }
 
 output "internet_gateway_id" {
-  description = "The ID of the Internet Gateway."
-  value       = module.vpc.internet_gateway_id
-}
-
-output "public_route_table_id" {
-  description = "The ID of the public route table."
-  value       = module.route_tables.public_route_table_id
-}
-
-output "private_route_table_id" {
-  description = "The ID of the private route table."
-  value       = module.route_tables.private_route_table_id
+  value = module.vpc_module.internet_gateway_id
 }
 
 output "nat_gateway_id" {
-  description = "The ID of the NAT Gateway."
-  value       = module.nat_gateway.nat_gateway_id
+  value = module.nat_gateway_module.nat_gateway_id
+}
+
+output "public_route_table_id" {
+  value = module.route_table_module.public_route_table_id
+}
+
+output "private_route_table_id" {
+  value = module.route_table_module.private_route_table_id
 }
 
 output "public_security_group_id" {
-  description = "The ID of the public EC2 security group."
-  value       = module.security_group.public_security_group_id
+  value = module.security_group_module.public_security_group_id
 }
 
 output "private_security_group_id" {
-  description = "The ID of the private EC2 security group."
-  value       = module.security_group.private_security_group_id
+  value = module.security_group_module.private_security_group_id
 }
 
 output "instance_ids" {
-  description = "The IDs of the EC2 instances."
-  value       = module.ec2.instance_ids
+  value = module.ec2_module.instance_ids
 }
 
 output "instance_public_ips" {
-  description = "The public IPs or Elastic IPs of the EC2 instances."
-  value       = module.ec2.instance_public_ips
+  value = module.ec2_module.instance_public_ips
 }
 
 output "instance_private_ips" {
-  description = "The private IPs of the EC2 instances."
-  value       = module.ec2.instance_private_ips
+  value = module.ec2_module.instance_private_ips
 }
 
 output "elastic_ip_ids" {
-  description = "The allocation IDs of the Elastic IP addresses."
-  value       = module.ec2.elastic_ip_ids
+  value = module.ec2_module.elastic_ip_ids
 }
 
 output "key_pair_name" {
-  description = "The name of the SSH key pair used by EC2 instances."
-  value       = module.ec2.key_pair_name
+  value = module.ec2_module.key_pair_name
 }
 
 output "key_secret_name" {
-  description = "The name of the AWS Secrets Manager secret containing the private key."
-  value       = module.ec2.key_secret_name
+  value = module.ec2_module.key_secret_name
 }
