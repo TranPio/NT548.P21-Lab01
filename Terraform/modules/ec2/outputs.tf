@@ -3,6 +3,16 @@ output "instance_ids" {
   value       = aws_instance.ec2_instances[*].id
 }
 
+output "key_pair_name" {
+  description = "Tên của SSH key pair được sử dụng"
+  value       = local.key_pair_name
+}
+
+output "key_secret_name" {
+  description = "Tên của secret chứa private key (nếu tạo mới)"
+  value       = var.create_new_keypair ? aws_secretsmanager_secret.instance_key_secret[0].name : "No secret created - using existing key"
+}
+
 output "instance_public_ips" {
   description = "Public IPs of instances (direct from instance or EIP if attached)"
   value = {
