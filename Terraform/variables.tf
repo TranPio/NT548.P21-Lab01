@@ -43,7 +43,7 @@ variable "allowed_ssh_cidr" {
 variable "create_new_keypair" {
   description = "Whether to create a new SSH key pair or use an existing one."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "existing_key_name" {
