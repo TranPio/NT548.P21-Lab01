@@ -41,7 +41,7 @@ variable "create_new_keypair" {
 
 variable "existing_key_name" {
   type        = string
-  default     = "nt548-lab01-group10-key"
+  default     = "nt548-lab01-group10-key-1"
 }
 
 variable "ami" {

@@ -26,7 +26,7 @@ resource "aws_key_pair" "instance_key_pair" {
 # Tạo Secret để lưu private key - chỉ khi create_new_keypair = true
 resource "aws_secretsmanager_secret" "instance_key_secret" {
   count = var.create_new_keypair ? 1 : 0
-  name        = "${var.project_name}-keypair"
+  name        = local.key_pair_name
   description = "Private key for EC2 instances"
 }
 
@@ -63,7 +63,7 @@ resource "aws_instance" "ec2_instances" {
   key_name               = var.create_new_keypair ? aws_key_pair.instance_key_pair[0].key_name : var.instance_configuration[count.index].key_name != null ? var.instance_configuration[count.index].key_name : var.existing_key_name
   
   # Tạo public IP cho instance nếu được chỉ định
-  associate_public_ip_address = !var.instance_configuration[count.index].associate_elastic_ip
+  associate_public_ip_address = var.instance_configuration[count.index].associate_elastic_ip == true ? true : false
 
   # User data script nếu có
   user_data = var.create_new_keypair && var.instance_configuration[count.index].user_data_file == null ? data.template_file.user_data[0].rendered : var.instance_configuration[count.index].user_data_file != null ?file(var.instance_configuration[count.index].user_data_file) : null

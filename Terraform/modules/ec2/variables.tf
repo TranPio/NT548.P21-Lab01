@@ -21,7 +21,7 @@ variable "create_new_keypair" {
 variable "existing_key_name" {
   description = "Name of existing key pair to use if create_new_keypair is false"
   type        = string
-  default     = "nt548-lab01-group10-key"
+  default     = "nt548-lab01-group10-key-1"
 }
 
 variable "instance_configuration" {
