@@ -1,6 +1,6 @@
 locals {
   project_name = var.project_name
-  key_pair_name = "${var.project_name}-key"
+  key_pair_name = "${var.project_name}-key-1"
 }
 
 # Tìm key pair hiện có nếu không tạo mới
