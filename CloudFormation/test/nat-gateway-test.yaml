@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Test NAT Gateway - EC2 Private Subnet có Internet (Free Tier)
+
+Parameters:
+  PrivateSubnetId:
+    Type: String
+  DefaultSecurityGroupId:
+    Type: String
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+
+Resources:
+  TestPrivateEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      SubnetId: !Ref PrivateSubnetId
+      ImageId: ami-0c02fb55956c7d316
+      SecurityGroupIds:
+        - !Ref DefaultSecurityGroupId
+      Tags:
+        - Key: Name
+          Value: Test-NAT-Instance
