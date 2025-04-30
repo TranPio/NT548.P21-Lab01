@@ -56,41 +56,30 @@ module "ec2_module" {
   aws_region         = var.region
   create_new_keypair = var.create_new_keypair
   existing_key_name  = var.existing_key_name
-
   instance_configuration = [
     {
-      name                    = "public-instance-1"
-      ami                     = var.ami
-      instance_type           = "t2.micro"
+      name                    = var.instance_configuration[0].name
+      ami                     = var.instance_configuration[0].ami
+      instance_type           = var.instance_configuration[0].instance_type
       subnet_id               = module.vpc_module.public_subnet_ids[0]
       vpc_security_group_ids  = [module.security_group_module.public_security_group_id]
-      key_name                = null
-      user_data_file          = var.user_data_file
-      associate_elastic_ip    = true
-      root_block_device = {
-        volume_size           = 8
-        volume_type           = "gp2"
-      }
-      tags = {
-        Name = "public-instance"
-      }
+      key_name                = var.instance_configuration[0].key_name
+      user_data_file          = var.instance_configuration[0].user_data_file
+      associate_elastic_ip    = var.instance_configuration[0].associate_elastic_ip
+      root_block_device       = var.instance_configuration[0].root_block_device
+      tags                    = var.instance_configuration[0].tags
     },
     {
-      name                    = "private-instance-1"
-      ami                     = var.ami
-      instance_type           = "t2.micro"
+      name                    = var.instance_configuration[1].name
+      ami                     = var.instance_configuration[1].ami
+      instance_type           = var.instance_configuration[1].instance_type
       subnet_id               = module.vpc_module.private_subnet_ids[0]
       vpc_security_group_ids  = [module.security_group_module.private_security_group_id]
-      key_name                = null
-      user_data_file          = null
-      associate_elastic_ip    = false
-      root_block_device = {
-        volume_size           = 8
-        volume_type           = "gp2"
-      }
-      tags = {
-        Name = "private-instance"
-      }
+      key_name                = var.instance_configuration[1].key_name
+      user_data_file          = var.instance_configuration[1].user_data_file
+      associate_elastic_ip    = var.instance_configuration[1].associate_elastic_ip
+      root_block_device       = var.instance_configuration[1].root_block_device
+      tags                    = var.instance_configuration[1].tags
     }
   ]
 }
