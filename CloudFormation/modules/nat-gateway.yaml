@@ -15,7 +15,9 @@ Resources:
       Domain: vpc
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-eip"
+          Value: !Sub "${ProjectName}-public-subnet"
+        - Key: Type
+          Value: public
 
   NatGateway:
     Type: AWS::EC2::NatGateway
@@ -29,5 +31,10 @@ Resources:
 Outputs:
   NatGatewayId:
     Value: !Ref NatGateway
+    Export:
+      Name: Network-NatGatewayId
   EipId:
     Value: !Ref ElasticIP
+    Export:
+      Name: Network-EipId
+

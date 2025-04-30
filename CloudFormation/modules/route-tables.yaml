@@ -58,3 +58,13 @@ Resources:
     Properties:
       SubnetId: !Ref PrivateSubnetId
       RouteTableId: !Ref PrivateRouteTable
+
+Outputs:
+  PublicRouteTableId:
+    Value: !Ref PublicRouteTable
+    Export:
+      Name: Network-PublicRtId
+  PrivateRouteTableId:
+    Value: !Ref PrivateRouteTable
+    Export:
+      Name: Network-PrivateRtId

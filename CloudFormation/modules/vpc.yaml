@@ -13,7 +13,7 @@ Parameters:
     Default: 10.0.2.0/24
   AvailabilityZone:
     Type: String
-    Default: us-east-1a
+    Default: ap-southeast-1
   ProjectName:
     Type: String
     Default: my-project
@@ -52,6 +52,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${ProjectName}-public-subnet"
+        - Key: Type
+          Value: public
 
   PrivateSubnet:
     Type: AWS::EC2::Subnet
@@ -71,7 +73,7 @@ Resources:
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: -1
-          SourceSecurityGroupId: !Ref DefaultSecurityGroup
+          CidrIp: 0.0.0.0/0  
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -79,13 +81,40 @@ Resources:
         - Key: Name
           Value: !Sub "${ProjectName}-default-sg"
 
+
 Outputs:
   VpcId:
-    Description: ID of the created VPC
+    Description: VPC ID
     Value: !Ref VPC
-  PublicSubnetId:
-    Value: !Ref PublicSubnet
-  PrivateSubnetId:
-    Value: !Ref PrivateSubnet
+    Export:
+      Name: Network-VpcId
+
+  VpcCidr:
+    Description: VPC CIDR
+    Value: !Ref VpcCidr
+    Export:
+      Name: Network-VpcCidr
+
   IGWId:
+    Description: InternetGateway ID
     Value: !Ref InternetGateway
+    Export:
+      Name: Network-IgwId
+
+  PublicSubnetId:
+    Description: Public Subnet ID
+    Value: !Ref PublicSubnet
+    Export:
+      Name: Network-PublicSubnetId
+
+  PrivateSubnetId:
+    Description: Private Subnet ID
+    Value: !Ref PrivateSubnet
+    Export:
+      Name: Network-PrivateSubnetId
+
+  DefaultSecurityGroupId:
+    Description: Default Security Group ID
+    Value: !Ref DefaultSecurityGroup
+    Export:
+      Name: Network-DefaultSgId
