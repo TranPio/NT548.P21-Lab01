@@ -53,3 +53,57 @@ variable "user_data_file" {
   type        = string
   default     = "user-data.sh"
 }
+
+variable "instance_configuration" {
+  type = list(object({
+    name                    = string
+    ami                     = string
+    instance_type           = string
+    subnet_id               = string
+    vpc_security_group_ids  = list(string)
+    key_name                = string
+    user_data_file          = string
+    associate_elastic_ip    = bool
+    root_block_device = object({
+      volume_size = number
+      volume_type = string
+    })
+    tags = map(string)
+  }))
+  default = [
+    {
+      name                    = "public-instance-1"
+      ami                     = "ami-0c1907b6d738188e5"
+      instance_type           = "t2.micro"
+      subnet_id               = "" # Sẽ được gán trong main.tf
+      vpc_security_group_ids  = [] # Sẽ được gán trong main.tf
+      key_name                = null
+      user_data_file          = "user-data.sh"
+      associate_elastic_ip    = true
+      root_block_device = {
+        volume_size = 8
+        volume_type = "gp2"
+      }
+      tags = {
+        Name = "public-instance"
+      }
+    },
+    {
+      name                    = "private-instance-1"
+      ami                     = "ami-0c1907b6d738188e5"
+      instance_type           = "t2.micro"
+      subnet_id               = "" # Sẽ được gán trong main.tf
+      vpc_security_group_ids  = [] # Sẽ được gán trong main.tf
+      key_name                = null
+      user_data_file          = null
+      associate_elastic_ip    = false
+      root_block_device = {
+        volume_size = 8
+        volume_type = "gp2"
+      }
+      tags = {
+        Name = "private-instance"
+      }
+    }
+  ]
+}
