@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create EC2 instances in Public and Private Subnets
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  PublicSubnetId:
+    Type: AWS::EC2::Subnet::Id
+  PrivateSubnetId:
+    Type: AWS::EC2::Subnet::Id
+  AmiId:
+    Type: AWS::EC2::Image::Id
+  InstanceType:
+    Type: String
+    Default: t2.micro
+  EnablePublicIP:
+    Type: String
+    AllowedValues: [true, false]
+    Default: true
+  PublicSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  PrivateSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  ProjectName:
+    Type: String
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: nt548-lab01-group10_CloudFormation-key
+
+Resources:
+  PublicEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      ImageId: !Ref AmiId
+      SubnetId: !Ref PublicSubnetId
+      SecurityGroupIds:
+        - !Ref PublicSecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-public-instance"
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo mkdir -p /home/ubuntu/.ssh
+          sudo chmod 700 /home/ubuntu/.ssh
+          sudo chown ubuntu:ubuntu /home/ubuntu/.ssh
+
+  PrivateEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      ImageId: !Ref AmiId
+      SubnetId: !Ref PrivateSubnetId
+      SecurityGroupIds:
+        - !Ref PrivateSecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-private-instance"
+
+Outputs:
+  PublicEC2Id:
+    Value: !Ref PublicEC2
+  PrivateEC2Id:
+    Value: !Ref PrivateEC2
+  KeyName:
+    Value: !Ref KeyName
