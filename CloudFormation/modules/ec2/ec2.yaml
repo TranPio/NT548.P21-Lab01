@@ -23,16 +23,16 @@ Parameters:
     Type: AWS::EC2::SecurityGroup::Id
   ProjectName:
     Type: String
-  ExistingKeyName:
-    Type: String
-    Description: "Name of the existing EC2 KeyPair"
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: nt548-lab01-group10_CloudFormation-key
 
 Resources:
   PublicEC2:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
-      KeyName: !Ref ExistingKeyName
+      KeyName: !Ref KeyName
       ImageId: !Ref AmiId
       SubnetId: !Ref PublicSubnetId
       SecurityGroupIds:
@@ -40,12 +40,18 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${ProjectName}-public-instance"
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo mkdir -p /home/ubuntu/.ssh
+          sudo chmod 700 /home/ubuntu/.ssh
+          sudo chown ubuntu:ubuntu /home/ubuntu/.ssh
 
   PrivateEC2:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
-      KeyName: !Ref ExistingKeyName
+      KeyName: !Ref KeyName
       ImageId: !Ref AmiId
       SubnetId: !Ref PrivateSubnetId
       SecurityGroupIds:
@@ -59,5 +65,5 @@ Outputs:
     Value: !Ref PublicEC2
   PrivateEC2Id:
     Value: !Ref PrivateEC2
-  ExistingKeyName:
-    Value: !Ref ExistingKeyName
+  KeyName:
+    Value: !Ref KeyName

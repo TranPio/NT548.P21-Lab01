@@ -41,7 +41,7 @@ $privateEc2Id = (aws cloudformation describe-stacks --stack-name $stackName | Co
 
 # Retrieve Key Pair Name
 $keyPairName = (aws cloudformation describe-stacks --stack-name $stackName | ConvertFrom-Json).Stacks[0].Outputs |
-    Where-Object { $_.OutputKey -eq "ExistingKeyName" } |
+    Where-Object { $_.OutputKey -eq "KeyName" } |
     Select-Object -ExpandProperty OutputValue
 
 Write-Host "Public EC2 ID:  $publicEc2Id"
