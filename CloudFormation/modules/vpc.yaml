@@ -1,120 +1,109 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: Module 1 - VPC with Public and Private Subnet
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template create VPC
 
 Parameters:
-  VpcCidr:
+  VpcCIDR:
+    Description: IP range for this VPC
     Type: String
     Default: 10.0.0.0/16
-  PublicSubnetCidr:
+
+  PublicSubnetCIDR:
+    Description: IP range for the public subnet
     Type: String
     Default: 10.0.1.0/24
-  PrivateSubnetCidr:
+
+  PrivateSubnetCIDR:
+    Description: IP range for the private subnet
     Type: String
     Default: 10.0.2.0/24
-  AvailabilityZone:
-    Type: String
-    Default: ap-southeast-1
-  ProjectName:
-    Type: String
-    Default: my-project
 
 Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: !Ref VpcCidr
+      CidrBlock: !Ref VpcCIDR
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-vpc"
+          Value: Lab1 VPC
+
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PublicSubnetCIDR
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: Public Subnet
+
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PrivateSubnetCIDR
+      MapPublicIpOnLaunch: false
+      AvailabilityZone: !Select
+        - 1
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: Private Subnet
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-igw"
+          Value: Internet Gateway
 
-  AttachGateway:
+  InternetGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
-
-  PublicSubnet:
-    Type: AWS::EC2::Subnet
-    Properties:
       VpcId: !Ref VPC
-      CidrBlock: !Ref PublicSubnetCidr
-      AvailabilityZone: !Ref AvailabilityZone
-      MapPublicIpOnLaunch: true
-      Tags:
-        - Key: Name
-          Value: !Sub "${ProjectName}-public-subnet"
-        - Key: Type
-          Value: public
-
-  PrivateSubnet:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: !Ref PrivateSubnetCidr
-      AvailabilityZone: !Ref AvailabilityZone
-      MapPublicIpOnLaunch: false
-      Tags:
-        - Key: Name
-          Value: !Sub "${ProjectName}-private-subnet"
 
   DefaultSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Default SG for VPC
+      GroupName: DefaultSecurityGroup
+      GroupDescription: Default security group for the VPC
       VpcId: !Ref VPC
-      SecurityGroupIngress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0  
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-default-sg"
-
+          Value: Default Security Group
 
 Outputs:
-  VpcId:
-    Description: VPC ID
+  VPCId:
+    Description: The VPC ID
     Value: !Ref VPC
     Export:
-      Name: Network-VpcId
-
-  VpcCidr:
-    Description: VPC CIDR
-    Value: !Ref VpcCidr
-    Export:
-      Name: Network-VpcCidr
-
-  IGWId:
-    Description: InternetGateway ID
-    Value: !Ref InternetGateway
-    Export:
-      Name: Network-IgwId
+      Name: VPCId
 
   PublicSubnetId:
-    Description: Public Subnet ID
+    Description: The Public Subnet ID
     Value: !Ref PublicSubnet
     Export:
-      Name: Network-PublicSubnetId
+      Name: NT548-P21-Lab01-PublicSubnetId
 
   PrivateSubnetId:
-    Description: Private Subnet ID
+    Description: The Private Subnet ID
     Value: !Ref PrivateSubnet
     Export:
-      Name: Network-PrivateSubnetId
+      Name: NT548-P21-Lab01-PrivateSubnetId
+
+  InternetGatewayId:
+    Description: The Internet Gateway ID
+    Value: !Ref InternetGateway
+    Export:
+      Name: InternetGatewayId
 
   DefaultSecurityGroupId:
-    Description: Default Security Group ID
+    Description: The Default Security Group ID
     Value: !Ref DefaultSecurityGroup
     Export:
-      Name: Network-DefaultSgId
+      Name: DefaultSecurityGroupId

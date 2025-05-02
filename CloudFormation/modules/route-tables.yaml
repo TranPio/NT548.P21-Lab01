@@ -1,70 +1,56 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Module 2 - Route Tables for Single Public and Private Subnet
-
-Parameters:
-  VpcId:
-    Type: String
-  IGWId:
-    Type: String
-  PublicSubnetId:
-    Type: String
-  PrivateSubnetId:
-    Type: String
-  NatGatewayId:
-    Type: String
-  ProjectName:
-    Type: String
-    Default: my-project
+Description: This template creates public and private route tables and associates them with subnets.
 
 Resources:
+
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref VpcId
+      VpcId: !ImportValue VPCId
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-public-rt"
+          Value: Public Route Table
 
   PublicRoute:
     Type: AWS::EC2::Route
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref IGWId
+      GatewayId: !ImportValue InternetGatewayId
 
   PublicSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnetId
+      SubnetId: !ImportValue NT548-P21-Lab01-PublicSubnetId
       RouteTableId: !Ref PublicRouteTable
 
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref VpcId
+      VpcId: !ImportValue VPCId
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-private-rt"
+          Value: Private Route Table
 
   PrivateRoute:
     Type: AWS::EC2::Route
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NatGatewayId
+      NatGatewayId: !ImportValue NatGatewayId
+
 
   PrivateSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnetId
+      SubnetId: !ImportValue NT548-P21-Lab01-PrivateSubnetId
       RouteTableId: !Ref PrivateRouteTable
 
 Outputs:
   PublicRouteTableId:
+    Description: ID of the public route table
     Value: !Ref PublicRouteTable
-    Export:
-      Name: Network-PublicRtId
+
   PrivateRouteTableId:
+    Description: ID of the private route table
     Value: !Ref PrivateRouteTable
-    Export:
-      Name: Network-PrivateRtId

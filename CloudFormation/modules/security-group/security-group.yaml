@@ -1,56 +1,56 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: Security Group for Public and Private EC2 Instance
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template create Security Groups
 
 Parameters:
-  ProjectName:
+  AllowedSSHIP:
+    Description: The IP address range that can SSH to the public EC2 instances
     Type: String
-  VPCId:
-    Type: AWS::EC2::VPC::Id
-  AllowCidr:
-    Type: String
+    Default: 0.0.0.0/0  # Change to your user IP address
 
 Resources:
-  PublicSecurityGroup:
+  PublicEC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow SSH from allow IP
-      VpcId: !Ref VPCId
+      GroupDescription: Security group for public EC2 instances
+      VpcId: !ImportValue VPCId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: !Ref AllowCidr
+          CidrIp: !Ref AllowedSSHIP
       SecurityGroupEgress:
         - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-public-sg"
+          Value: Public EC2 Security Group
 
-  PrivateSecurityGroup:
+  PrivateEC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow SSH from Public EC2
-      VpcId: !Ref VPCId
+      GroupDescription: Security group for private EC2 instances
+      VpcId: !ImportValue VPCId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          SourceSecurityGroupId: !Ref PublicSecurityGroup
+          SourceSecurityGroupId: !Ref PublicEC2SecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-private-sg"
+          Value: Private EC2 Security Group
 
 Outputs:
-  PublicSecurityGroupId:
-    Value: !Ref PublicSecurityGroup
+  PublicEC2SecurityGroupId:
+    Description: The ID of the public EC2 security group
+    Value: !Ref PublicEC2SecurityGroup
+    Export:
+      Name: NT548-P21-Lab01-PublicEC2SecurityGroupId
 
-  PrivateSecurityGroupId:
-    Value: !Ref PrivateSecurityGroup
+  PrivateEC2SecurityGroupId:
+    Description: The ID of the private EC2 security group
+    Value: !Ref PrivateEC2SecurityGroup
+    Export:
+      Name: NT548-P21-Lab01-PrivateEC2SecurityGroupId
