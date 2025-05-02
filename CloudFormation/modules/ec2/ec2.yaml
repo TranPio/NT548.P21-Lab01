@@ -1,69 +1,70 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: Create EC2 instances in Public and Private Subnets
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template creates EC2 instances in public and private subnets
 
 Parameters:
-  VpcId:
-    Type: AWS::EC2::VPC::Id
-  PublicSubnetId:
-    Type: AWS::EC2::Subnet::Id
-  PrivateSubnetId:
-    Type: AWS::EC2::Subnet::Id
-  AmiId:
-    Type: AWS::EC2::Image::Id
+  KeyName:
+    Description: Name of KeyPair to enable SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: my-keypair  
+
   InstanceType:
+    Description: EC2 instance type
     Type: String
     Default: t2.micro
-  EnablePublicIP:
-    Type: String
-    AllowedValues: [true, false]
-    Default: true
-  PublicSecurityGroupId:
-    Type: AWS::EC2::SecurityGroup::Id
-  PrivateSecurityGroupId:
-    Type: AWS::EC2::SecurityGroup::Id
-  ProjectName:
-    Type: String
-  KeyName:
-    Type: AWS::EC2::KeyPair::KeyName
-    Default: nt548-lab01-group10_CloudFormation-key
+    AllowedValues: [t2.micro, t2.small, t2.medium]
+
+  AmiId:
+    Description: Amazon Linux 2 AMI ID in ap-southeast-1 (Singapore)
+    Type: AWS::EC2::Image::Id
+    Default: ami-013d590bbcbfa9792
 
 Resources:
-  PublicEC2:
+  PublicInstance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyName
       ImageId: !Ref AmiId
-      SubnetId: !Ref PublicSubnetId
-      SecurityGroupIds:
-        - !Ref PublicSecurityGroupId
-      Tags:
-        - Key: Name
-          Value: !Sub "${ProjectName}-public-instance"
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: 
+            - !ImportValue NT548.P21-Lab01-PublicEC2SecurityGroupId
+          SubnetId: !ImportValue NT548.P21-Lab01-PublicSubnetId
+      Tags: 
+        - Key: Name 
+          Value: Public Instance
       UserData:
         Fn::Base64: |
           #!/bin/bash
-          sudo mkdir -p /home/ubuntu/.ssh
-          sudo chmod 700 /home/ubuntu/.ssh
-          sudo chown ubuntu:ubuntu /home/ubuntu/.ssh
+          mkdir -p /home/ec2-user/.ssh
+          chmod 700 /home/ec2-user/.ssh
+          chown ec2-user:ec2-user /home/ec2-user/.ssh
 
-  PrivateEC2:
+  PrivateInstance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyName
       ImageId: !Ref AmiId
-      SubnetId: !Ref PrivateSubnetId
-      SecurityGroupIds:
-        - !Ref PrivateSecurityGroupId
-      Tags:
-        - Key: Name
-          Value: !Sub "${ProjectName}-private-instance"
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: "false"
+          DeviceIndex: "0"
+          GroupSet: 
+            - !ImportValue NT548.P21-Lab01-PrivateEC2SecurityGroupId
+          SubnetId: !ImportValue NT548.P21-Lab01-PrivateSubnetId
+      Tags: 
+        - Key: Name 
+          Value: Private Instance
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
 
 Outputs:
-  PublicEC2Id:
-    Value: !Ref PublicEC2
-  PrivateEC2Id:
-    Value: !Ref PrivateEC2
-  KeyName:
-    Value: !Ref KeyName
+  PublicInstanceIP:
+    Description: Public IP address of the Public Instance
+    Value: !GetAtt PublicInstance.PublicIp
+
+  PrivateInstancePrivateIP:
+    Description: Private IP address of the Private Instance
+    Value: !GetAtt PrivateInstance.PrivateIp

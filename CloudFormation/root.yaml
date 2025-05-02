@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Root Stack - Deploy the entire NT548.P21-Lab01 infrastructure using Nested Stacks
+
+Parameters:
+  AllowedSSHIP:
+    Description: The IP address allowed to SSH to the public EC2 instances
+    Type: String
+    Default: 0.0.0.0/0
+
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: my-keypair 
+
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+
+  AmiId:
+    Description: Amazon Linux 2 AMI in ap-southeast-1
+    Type: AWS::EC2::Image::Id
+    Default: ami-013d590bbcbfa9792
+
+Resources:
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/vpc.yaml
+      Parameters:
+        VpcCIDR: 10.0.0.0/16
+        PublicSubnetCIDR: 10.0.1.0/24
+        PrivateSubnetCIDR: 10.0.2.0/24
+
+  NATStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: VPCStack
+    Properties:
+      TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/nat-gateway.yaml
+      Parameters:
+        PublicSubnetId: !GetAtt VPCStack.Outputs.PublicSubnetId
+        ProjectName: NT548.P21-Lab01
+
+  RouteTablesStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPCStack
+      - NATStack
+    Properties:
+      TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/route-table.yaml
+
+  SecurityGroupsStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: VPCStack
+    Properties:
+      TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/security-group/security-group.yaml
+      Parameters:
+        AllowedSSHIP: !Ref AllowedSSHIP
+
+  EC2Stack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPCStack
+      - RouteTablesStack
+      - SecurityGroupsStack
+    Properties:
+      TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/ec2/ec2.yaml
+      Parameters:
+        VpcId: !GetAtt VPCStack.Outputs.VPCId
+        PublicSubnetId: !GetAtt VPCStack.Outputs.PublicSubnetId
+        PrivateSubnetId: !GetAtt VPCStack.Outputs.PrivateSubnetId
+        AmiId: !Ref AmiId
+        InstanceType: !Ref InstanceType
+        EnablePublicIP: "true"
+        PublicSecurityGroupId: !GetAtt SecurityGroupsStack.Outputs.PublicEC2SecurityGroupId
+        PrivateSecurityGroupId: !GetAtt SecurityGroupsStack.Outputs.PrivateEC2SecurityGroupId
+        KeyName: !Ref KeyName
+        ProjectName: NT548.P21-Lab01
+
+Outputs:
+  PublicEC2Id:
+    Description: ID of the Public EC2 Instance
+    Value: !GetAtt EC2Stack.Outputs.PublicEC2Id
+  PrivateEC2Id:
+    Description: ID of the Private EC2 Instance
+    Value: !GetAtt EC2Stack.Outputs.PrivateEC2Id
+  PublicInstanceIP:
+    Description: Public IP address of the Public Instance
+    Value: !GetAtt EC2Stack.Outputs.PublicInstanceIP
+  PrivateInstancePrivateIP:
+    Description: Private IP address of the Private Instance
+    Value: !GetAtt EC2Stack.Outputs.PrivateInstancePrivateIP
