@@ -30,4 +30,4 @@ Outputs:
     Description: The NAT Gateway ID
     Value: !Ref NatGateway
     Export:
-      Name: !Sub "${AWS::StackName}-NatGatewayId"
+      Name: NatGatewayId
