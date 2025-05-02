@@ -29,8 +29,8 @@ Resources:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
           GroupSet: 
-            - !ImportValue NT548.P21-Lab01-PublicEC2SecurityGroupId
-          SubnetId: !ImportValue NT548.P21-Lab01-PublicSubnetId
+            - !ImportValue NT548-P21-Lab01-PublicEC2SecurityGroupId
+          SubnetId: !ImportValue NT548-P21-Lab01-PublicSubnetId
       Tags: 
         - Key: Name 
           Value: Public Instance
@@ -51,8 +51,8 @@ Resources:
         - AssociatePublicIpAddress: "false"
           DeviceIndex: "0"
           GroupSet: 
-            - !ImportValue NT548.P21-Lab01-PrivateEC2SecurityGroupId
-          SubnetId: !ImportValue NT548.P21-Lab01-PrivateSubnetId
+            - !ImportValue NT548-P21-Lab01-PrivateEC2SecurityGroupId
+          SubnetId: !ImportValue NT548-P21-Lab01-PrivateSubnetId
       Tags: 
         - Key: Name 
           Value: Private Instance
