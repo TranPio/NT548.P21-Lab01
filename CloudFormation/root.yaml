@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: '2010-09-09'
 Description: Root Stack - Deploy the entire NT548.P21-Lab01 infrastructure using Nested Stacks
 
 Parameters:
@@ -10,7 +10,7 @@ Parameters:
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access
     Type: AWS::EC2::KeyPair::KeyName
-    Default: my-keypair 
+    Default: my-keypair
 
   InstanceType:
     Description: EC2 instance type
@@ -27,14 +27,16 @@ Parameters:
     Default: ami-013d590bbcbfa9792
 
 Resources:
+
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/vpc.yaml
       Parameters:
-        VpcCIDR: 10.0.0.0/16
-        PublicSubnetCIDR: 10.0.1.0/24
-        PrivateSubnetCIDR: 10.0.2.0/24
+        VpcCidr: 10.0.0.0/16
+        PublicSubnetCidr: 10.0.1.0/24
+        PrivateSubnetCidr: 10.0.2.0/24
+        ProjectName: NT548.P21-Lab01
 
   NATStack:
     Type: AWS::CloudFormation::Stack
@@ -51,7 +53,14 @@ Resources:
       - VPCStack
       - NATStack
     Properties:
-      TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/route-table.yaml
+      TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/route-tables.yaml
+      Parameters:
+        VpcId:            !GetAtt VPCStack.Outputs.VpcId
+        IGWId:            !GetAtt VPCStack.Outputs.IGWId
+        PublicSubnetId:   !GetAtt VPCStack.Outputs.PublicSubnetId
+        PrivateSubnetId:  !GetAtt VPCStack.Outputs.PrivateSubnetId
+        NatGatewayId:     !GetAtt NATStack.Outputs.NatGatewayId
+        ProjectName:      NT548.P21-Lab01
 
   SecurityGroupsStack:
     Type: AWS::CloudFormation::Stack
@@ -59,7 +68,9 @@ Resources:
     Properties:
       TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/security-group/security-group.yaml
       Parameters:
-        AllowedSSHIP: !Ref AllowedSSHIP
+        AllowCidr:   !Ref AllowedSSHIP
+        VPCId:       !GetAtt VPCStack.Outputs.VpcId
+        ProjectName: NT548.P21-Lab01
 
   EC2Stack:
     Type: AWS::CloudFormation::Stack
@@ -70,27 +81,38 @@ Resources:
     Properties:
       TemplateURL: https://nt548-group10-cloudformation.s3.ap-southeast-1.amazonaws.com/CloudFormation/modules/ec2/ec2.yaml
       Parameters:
-        VpcId: !GetAtt VPCStack.Outputs.VPCId
-        PublicSubnetId: !GetAtt VPCStack.Outputs.PublicSubnetId
-        PrivateSubnetId: !GetAtt VPCStack.Outputs.PrivateSubnetId
-        AmiId: !Ref AmiId
-        InstanceType: !Ref InstanceType
-        EnablePublicIP: "true"
-        PublicSecurityGroupId: !GetAtt SecurityGroupsStack.Outputs.PublicEC2SecurityGroupId
-        PrivateSecurityGroupId: !GetAtt SecurityGroupsStack.Outputs.PrivateEC2SecurityGroupId
-        KeyName: !Ref KeyName
-        ProjectName: NT548.P21-Lab01
+        VpcId:                    !GetAtt VPCStack.Outputs.VpcId
+        PublicSubnetId:           !GetAtt VPCStack.Outputs.PublicSubnetId
+        PrivateSubnetId:          !GetAtt VPCStack.Outputs.PrivateSubnetId
+        AmiId:                    !Ref AmiId
+        InstanceType:             !Ref InstanceType
+        EnablePublicIP:           "true"
+        PublicSecurityGroupId:    !GetAtt SecurityGroupsStack.Outputs.PublicSecurityGroupId
+        PrivateSecurityGroupId:   !GetAtt SecurityGroupsStack.Outputs.PrivateSecurityGroupId
+        KeyName:                  !Ref KeyName
+        ProjectName:              NT548.P21-Lab01
 
 Outputs:
-  PublicEC2Id:
-    Description: ID of the Public EC2 Instance
-    Value: !GetAtt EC2Stack.Outputs.PublicEC2Id
-  PrivateEC2Id:
-    Description: ID of the Private EC2 Instance
-    Value: !GetAtt EC2Stack.Outputs.PrivateEC2Id
+  VpcId:
+    Description: VPC ID
+    Value: !GetAtt VPCStack.Outputs.VpcId
+
+  PublicRouteTableId:
+    Description: Public Route Table ID
+    Value: !GetAtt RouteTablesStack.Outputs.PublicRouteTableId
+
+  PrivateRouteTableId:
+    Description: Private Route Table ID
+    Value: !GetAtt RouteTablesStack.Outputs.PrivateRouteTableId
+
+  NatGatewayId:
+    Description: NAT Gateway ID
+    Value: !GetAtt NATStack.Outputs.NatGatewayId
+
   PublicInstanceIP:
-    Description: Public IP address of the Public Instance
+    Description: Public EC2 Instance IP
     Value: !GetAtt EC2Stack.Outputs.PublicInstanceIP
+
   PrivateInstancePrivateIP:
-    Description: Private IP address of the Private Instance
+    Description: Private EC2 Instance IP
     Value: !GetAtt EC2Stack.Outputs.PrivateInstancePrivateIP
