@@ -96,25 +96,55 @@ terraform apply
 
 > ✅ After apply, note the outputs: public/private IPs, instance IDs, etc.
 
-## 🔐 SSH Access to EC2 Instances
+## 🛰️ Steps to SSH to Instances
 
-1. **SSH to Public Instance**
+After applying all nested modules, you will see an output similar to the one below, which includes public and private IPs for each instance.
 
+📸 **Hình 29** – Kết quả sau khi chạy `terraform apply` hiển thị output của các instance  
+![Terraform Output](Image/fig29.png)
+
+### Example Output (interpreted):
+
+- `instance_private_ips`:  
+  - `192.168.1.251` → Private IP of **Public Instance**  
+  - `192.168.2.140` → Private IP of **Private Instance**
+
+- `instance_public_ips`:  
+  - `13.251.48.2` → Public IP of **Public Instance**
+
+---
+
+### 🔐 SSH to Public Instance
+
+To connect to your public EC2 instance, follow these steps:
+
+1. Locate your private key file (`.pem`)
+2. Ensure proper permission:
 ```bash
 chmod 400 <private-key-file>
+```
+3. SSH into the public instance:
+```bash
 ssh -i <private-key-file> <username>@<public-ip>
 ```
 
-2. **SSH to Private Instance via Public**
+---
 
+### 🔐 SSH to Private Instance (via Public)
+
+Once you're inside the **public instance**, follow these steps:
+
+1. Navigate to the SSH directory:
 ```bash
 cd ~/.ssh
+```
+2. Run:
+```bash
 chmod 400 <private-key-file>
 ssh -i <private-key-file> <username>@<private-ip>
 ```
 
-> The `user-data.sh` script automatically fetches the key from Secrets Manager.  
-> See: 📸 **Image 6, 7, 8**
+> ✅ The file `user-data.sh` automatically retrieves your private key from AWS Secrets Manager and places it in `~/.ssh/` to simplify this process.
 
 ## 📸 Diagrams and Screenshots
 
