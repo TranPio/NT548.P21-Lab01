@@ -47,10 +47,10 @@ Outputs:
     Description: The ID of the public EC2 security group
     Value: !Ref PublicEC2SecurityGroup
     Export:
-      Name: PublicEC2SecurityGroupId
+      Name: NT548.P21-Lab01-PublicEC2SecurityGroupId
 
   PrivateEC2SecurityGroupId:
     Description: The ID of the private EC2 security group
     Value: !Ref PrivateEC2SecurityGroup
     Export:
-      Name: PrivateEC2SecurityGroupId
+      Name: NT548.P21-Lab01-PrivateEC2SecurityGroupId
