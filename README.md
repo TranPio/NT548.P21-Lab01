@@ -148,25 +148,35 @@ ssh -i <private-key-file> <username>@<private-ip>
 
 ## 📸 Diagrams and Screenshots
 
-## 📸 Diagrams and Screenshots
-
-**Image 1** – Resource VPC creation using Terraform module  
+**Image 1** – This image shows the creation of a VPC using Terraform. The configuration includes CIDR blocks, DNS settings, and resource tagging.  
 ![VPC Creation](Image/fig1.png)
 
-**Image 2** – Create NAT Gateway with Elastic IP  
+---
+
+**Image 2** – This diagram illustrates how the NAT Gateway is provisioned in a public subnet and linked with an Elastic IP. It enables instances in the private subnet to securely access the internet.  
 ![NAT Gateway](Image/fig9.png)
 
-**Image 3** – Setup private route table routing via NAT Gateway  
+---
+
+**Image 3** – Here we configure a private route table that routes all external traffic through the NAT Gateway. This is essential for outbound internet access from private instances.  
 ![Private Route Table](Image/fig13.png)
 
-**Image 4** – Security group: only allow SSH from Public SG  
+---
+
+**Image 4** – The image demonstrates the setup of a private security group. It allows SSH access only from EC2 instances in the public subnet (bastion host model), enhancing security.  
 ![Private Security Group](Image/fig17.png)
 
-**Image 5** – Public & Private EC2 instance deployment  
+---
+
+**Image 5** – This setup shows both EC2 instances: one in a public subnet with Elastic IP, and one in a private subnet. The `user-data.sh` script is used to fetch keys automatically for internal SSH.  
 ![EC2 Setup](Image/fig22.png)
 
-**Image 6** – Successfully SSH into Public Instance  
+---
+
+**Image 6** – The output confirms that we successfully SSH into the public EC2 instance using a valid private key and IP address.  
 ![SSH Public Instance](Image/fig33.png)
 
-**Image 8** – SSH from Public Instance to Private using auto-downloaded key  
+---
+
+**Image 7** – Once inside the public instance, we can SSH into the private instance using the key retrieved from AWS Secrets Manager, validating internal network connectivity.  
 ![SSH to Private from Public](Image/fig35.png)
