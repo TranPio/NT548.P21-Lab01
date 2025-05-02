@@ -88,13 +88,13 @@ Outputs:
     Description: The Public Subnet ID
     Value: !Ref PublicSubnet
     Export:
-      Name: PublicSubnetId
+      Name: NT548.P21-Lab01-PublicSubnetId
 
   PrivateSubnetId:
     Description: The Private Subnet ID
     Value: !Ref PrivateSubnet
     Export:
-      Name: PrivateSubnetId
+      Name: NT548.P21-Lab01-PrivateSubnetId
 
   InternetGatewayId:
     Description: The Internet Gateway ID
