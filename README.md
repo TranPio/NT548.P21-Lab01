@@ -118,16 +118,25 @@ ssh -i <private-key-file> <username>@<private-ip>
 
 ## 📸 Diagrams and Screenshots
 
-- ![VPC Creation](Image/fig1.png) **Image 1** – Resource VPC creation using Terraform module
+## 📸 Diagrams and Screenshots
 
-- ![NAT Gateway](Image/fig9.png) **Image 2** – Create NAT Gateway with Elastic IP
+**Image 1** – Resource VPC creation using Terraform module  
+![VPC Creation](Image/fig1.png)
 
-- ![Private Route Table](Image/fig13.png) **Image 3** – Setup private route table routing via NAT Gateway
+**Image 2** – Create NAT Gateway with Elastic IP  
+![NAT Gateway](Image/fig9.png)
 
-- ![Private Security Group](Image/fig17.png) **Image 4** – Security group: only allow SSH from Public SG
+**Image 3** – Setup private route table routing via NAT Gateway  
+![Private Route Table](Image/fig13.png)
 
-- ![EC2 Setup](Image/fig22.png) **Image 5** – Public & Private EC2 instance deployment
+**Image 4** – Security group: only allow SSH from Public SG  
+![Private Security Group](Image/fig17.png)
 
-- ![SSH Public Instance](Image/fig33.png) **Iamge 6** – Successfully SSH into Public Instance
+**Image 5** – Public & Private EC2 instance deployment  
+![EC2 Setup](Image/fig22.png)
 
-- ![SSH to Private from Public](Image/fig35.png) **Image 8** – SSH from Public Instance to Private using auto-downloaded key
+**Image 6** – Successfully SSH into Public Instance  
+![SSH Public Instance](Image/fig33.png)
+
+**Image 8** – SSH from Public Instance to Private using auto-downloaded key  
+![SSH to Private from Public](Image/fig35.png)
