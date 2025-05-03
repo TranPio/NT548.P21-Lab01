@@ -183,7 +183,9 @@ ssh -i <private-key-file> <username>@<private-ip>
 **Image 7** – Once inside the public instance, we can SSH into the private instance using the key retrieved from AWS Secrets Manager, validating internal network connectivity.  
 ![SSH to Private from Public](Image/fig35.png)
 
+
 # NT548.P21-Lab01 – Deploy AWS Infrastructure using CloudFormation
+
 ## 📂 Project Structure
 ```
 NT548.P21-LAB01-1/
@@ -202,15 +204,64 @@ NT548.P21-LAB01-1/
 │ │ └── ec2_test_script.ps1
 │ ├── security-group/
 │ │ └── security_groups_test_script.ps1
-│ ├── my-keypair.pem
 │ ├── nat-gateway_script.ps1
 │ ├── route-table_script.ps1
 │ └── vpc_script.ps1
 └── root.yaml
 ```
-### 🚀 Create Stacks
+## 🧰 Prerequisites
+
+1. **AWS Credentials**  
+   Install and configure the AWS CLI with IAM user credentials.
+
+2. **SSH Key Pair**  
+   Create via EC2 Console. Store the private key (`.pem`) securely.
+
+3. **Secrets Manager**  
+   Save your `.pem` as a plaintext secret in AWS Secrets Manager.
+
+## 🚀 Deployment Instructions
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/TranPio/NT548.P21-Lab01.git
+cd NT548.P21-Lab01/CloudFormation
+```
+   
+## 🚀 Create Stacks
+
+
+## 🛰️ Steps to SSH to Instances
 
 ### 🔐 SSH to Public Instance
 
-### 🔐 SSH to Private Instance
+To connect to your public EC2 instance, follow these steps:
+
+1. Locate your private key file (`.pem`)
+2. Ensure proper permission:
+```bash
+chmod 400 <private-key-file>
+```
+3. SSH into the public instance:
+```bash
+ssh -i <private-key-file> <username>@<public-ip>
+```
+
+---
+
+### 🔐 SSH to Private Instance 
+
+Once you're inside the **public instance**, follow these steps:
+
+1. Navigate to the SSH directory:
+```bash
+cd ~/.ssh
+```
+2. Run:
+```bash
+chmod 400 <private-key-file>
+ssh -i <private-key-file> <username>@<private-ip>
+```
+
 
