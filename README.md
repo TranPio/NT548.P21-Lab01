@@ -174,9 +174,43 @@ ssh -i <private-key-file> <username>@<private-ip>
 ---
 
 **Image 6** – The output confirms that we successfully SSH into the public EC2 instance using a valid private key and IP address.  
+
+
 ![SSH Public Instance](Image/fig33.png)
 
 ---
 
 **Image 7** – Once inside the public instance, we can SSH into the private instance using the key retrieved from AWS Secrets Manager, validating internal network connectivity.  
 ![SSH to Private from Public](Image/fig35.png)
+
+# NT548.P21-Lab01 – Deploy AWS Infrastructure using CloudFormation
+## 📂 Project Structure
+```
+NT548.P21-LAB01-1/
+├── .vscode/
+├── CloudFormation/
+│ ├── modules/
+│ │ └── ec2/
+│ │ └── ec2.yaml
+│ ├── security-group/
+│ │ └── security-group.yaml
+│ ├── nat-gateway.yaml
+│ ├── route-tables.yaml
+│ └── vpc.yaml
+├── test/
+│ ├── ec2/
+│ │ └── ec2_test_script.ps1
+│ ├── security-group/
+│ │ └── security_groups_test_script.ps1
+│ ├── my-keypair.pem
+│ ├── nat-gateway_script.ps1
+│ ├── route-table_script.ps1
+│ └── vpc_script.ps1
+└── root.yaml
+```
+### 🚀 Create Stacks
+
+### 🔐 SSH to Public Instance
+
+### 🔐 SSH to Private Instance
+
