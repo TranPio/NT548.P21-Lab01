@@ -230,25 +230,28 @@ cd NT548.P21-Lab01/CloudFormation
 ```
    
 ## 🚀 Create Stacks
-
+All stacks created successfully.
+![create stack](Image/fig10.png)
 
 ## 🛰️ Steps to SSH to Instances
 
 ### 🔐 SSH to Public Instance
 
 To connect to your public EC2 instance, follow these steps:
-
 1. Locate your private key file (`.pem`)
+![copy file .pem](Image/fig12.png)
+
 2. Ensure proper permission:
 ```bash
 chmod 400 <private-key-file>
 ```
+
 3. SSH into the public instance:
 ```bash
 ssh -i <private-key-file> <username>@<public-ip>
 ```
+![SSH to Public Instance](Image/fig11.png).
 
----
 
 ### 🔐 SSH to Private Instance 
 
@@ -258,10 +261,12 @@ Once you're inside the **public instance**, follow these steps:
 ```bash
 cd ~/.ssh
 ```
+
 2. Run:
 ```bash
 chmod 400 <private-key-file>
 ssh -i <private-key-file> <username>@<private-ip>
 ```
+![SSH vào EC2 Public](Image/fig13.png).
 
-
+![SSH to Private Instance](Image/fig13.png).
