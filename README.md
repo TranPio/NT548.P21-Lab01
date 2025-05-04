@@ -250,7 +250,7 @@ chmod 400 <private-key-file>
 ```bash
 ssh -i <private-key-file> <username>@<public-ip>
 ```
-![SSH to Public Instance](Image/fig11.png).
+![SSH to Public Instance](Image/fig11.png)
 
 
 ### 🔐 SSH to Private Instance 
@@ -267,6 +267,6 @@ cd ~/.ssh
 chmod 400 <private-key-file>
 ssh -i <private-key-file> <username>@<private-ip>
 ```
-![SSH vào EC2 Public](Image/fig13.png).
+![SSH vào EC2 Public](Image/fig13.png)
 
-![SSH to Private Instance](Image/fig13.png).
+![SSH to Private Instance](Image/fig13.png)
