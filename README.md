@@ -235,7 +235,7 @@ aws cloudformation create-stack --stack-name <stackname> --template-body file://
 ```
 
 All stacks created successfully.
-![create stack](Image/fig10.png)
+![create stack](Image/fig70.png)
 
 ## 🛰️ Steps to SSH to Instances
 
@@ -243,7 +243,7 @@ All stacks created successfully.
 
 To connect to your public EC2 instance, follow these steps:
 1. Locate your private key file (`.pem`)
-![copy file .pem](Image/fig12.png)
+![copy file .pem](Image/fig77.png)
 
 2. Ensure proper permission:
 ```bash
@@ -254,7 +254,7 @@ chmod 400 <private-key-file>
 ```bash
 ssh -i <your-private-key> ec2-user@<your-public-instance-ip>
 ```
-![SSH to Public Instance](Image/fig11.png)
+![SSH to Public Instance](Image/fig74.png)
 
 
 ### 🔐 SSH to Private Instance 
@@ -271,9 +271,9 @@ cd ~/.ssh
 chmod 400 <private-key-file>
 ssh -i <your-private-key> ec2-user@<your-private-instance-privateip>
 ```
-![SSH vào EC2 Public](Image/fig13.png)
+![SSH vào EC2 Public](Image/fig75.png)
 
 Từ Public Instance SSH thành công đến Private Instance:
-![SSH to Private Instance](Image/fig13.png)
+![SSH to Private Instance](Image/fig76.png)
 
 
