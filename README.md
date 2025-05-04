@@ -186,16 +186,15 @@ ssh -i <private-key-file> <username>@<private-ip>
 
 # NT548.P21-Lab01 – Deploy AWS Infrastructure using CloudFormation
 
-## 📂 Project Structure
+## Project Structure
 ```
-NT548.P21-LAB01-1/
+CloudFormation/
 ├── .vscode/
-├── CloudFormation/
-│ ├── modules/
-│ │ └── ec2/
+│ └── settings.json
+├── modules/
+│ ├── ec2/
 │ │ └── ec2.yaml
 │ ├── security-group/
-│ │ └── security-group.yaml
 │ ├── nat-gateway.yaml
 │ ├── route-tables.yaml
 │ └── vpc.yaml
@@ -203,13 +202,13 @@ NT548.P21-LAB01-1/
 │ ├── ec2/
 │ │ └── ec2_test_script.ps1
 │ ├── security-group/
-│ │ └── security_groups_test_script.ps1
 │ ├── nat-gateway_script.ps1
 │ ├── route-table_script.ps1
 │ └── vpc_script.ps1
 └── root.yaml
 ```
-## 🧰 Prerequisites
+
+## Prerequisites
 
 1. **AWS Credentials**  
    Install and configure the AWS CLI with IAM user credentials.
@@ -220,7 +219,7 @@ NT548.P21-LAB01-1/
 3. **Secrets Manager**  
    Save your `.pem` as a plaintext secret in AWS Secrets Manager.
 
-## 🚀 Deployment Instructions
+## Deployment Instructions
 
 1. **Clone the repository**
 
@@ -229,7 +228,12 @@ git clone https://github.com/TranPio/NT548.P21-Lab01.git
 cd NT548.P21-Lab01/CloudFormation
 ```
    
-## 🚀 Create Stacks
+## Create Stacks
+
+```bash
+aws cloudformation create-stack --stack-name <stackname> --template-body file://root.yaml
+```
+
 All stacks created successfully.
 ![create stack](Image/fig10.png)
 
@@ -246,9 +250,9 @@ To connect to your public EC2 instance, follow these steps:
 chmod 400 <private-key-file>
 ```
 
-3. SSH into the public instance:
+3. SSH into the public instance
 ```bash
-ssh -i <private-key-file> <username>@<public-ip>
+ssh -i <your-private-key> ec2-user@<your-public-instance-ip>
 ```
 ![SSH to Public Instance](Image/fig11.png)
 
@@ -265,8 +269,11 @@ cd ~/.ssh
 2. Run:
 ```bash
 chmod 400 <private-key-file>
-ssh -i <private-key-file> <username>@<private-ip>
+ssh -i <your-private-key> ec2-user@<your-private-instance-privateip>
 ```
 ![SSH vào EC2 Public](Image/fig13.png)
 
+Từ Public Instance SSH thành công đến Private Instance:
 ![SSH to Private Instance](Image/fig13.png)
+
+
